@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Student Management System</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="brand-logo">
+        <i class="fas fa-university"></i>
+        <div>
+            <h5>AcademiaSMS</h5>
+            <small class="text-white-50">Admin Console</small>
+        </div>
+    </div>
+
+    <ul class="nav flex-column mb-auto">
+        <li class="nav-item">
+            <a href="#overviewSection" class="nav-link active" data-bs-toggle="pill" data-target="overview">
+                <i class="fas fa-tachometer-alt"></i> Dashboard Overview
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#studentsSection" class="nav-link" data-bs-toggle="pill" data-target="students">
+                <i class="fas fa-user-graduate"></i> Manage Students
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#facultySection" class="nav-link" data-bs-toggle="pill" data-target="faculty">
+                <i class="fas fa-chalkboard-teacher"></i> Manage Faculty
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#coursesSection" class="nav-link" data-bs-toggle="pill" data-target="courses">
+                <i class="fas fa-book-open"></i> Courses & Teachers
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#departmentsSection" class="nav-link" data-bs-toggle="pill" data-target="departments">
+                <i class="fas fa-building"></i> Departments
+            </a>
+        </li>
+    </ul>
+
+    <div class="pt-4 border-top border-white-50 mt-4">
+        <a href="#" class="nav-link text-danger logout-action">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </a>
+    </div>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+    <!-- Top Navbar -->
+    <nav class="top-navbar d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <h5 class="fw-bold mb-0 text-dark">Institutional Administration</h5>
+            <span class="badge bg-primary text-uppercase" id="userRoleBadge">ADMIN</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="text-end d-none d-sm-block">
+                <div class="fw-semibold text-dark" id="userFullNameDisplay">Administrator</div>
+                <small class="text-muted">admin@sms.edu</small>
+            </div>
+            <div class="avatar bg-primary text-white rounded-circle p-2 px-3 fw-bold">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <button class="btn btn-outline-danger btn-sm logout-action" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="content-container">
+        <!-- Notification alert container -->
+        <div id="adminAlertContainer"></div>
+
+        <!-- TAB 1: OVERVIEW -->
+        <div class="tab-pane-content" id="overviewSection">
+            <!-- KPI Cards Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-icon primary"><i class="fas fa-user-graduate"></i></div>
+                        <div class="stat-info">
+                            <h3 id="statTotalStudents">--</h3>
+                            <p>Total Registered Students</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card success"><i class="fas fa-chalkboard-teacher stat-icon success"></i>
+                        <div class="stat-info">
+                            <h3 id="statTotalFaculty">--</h3>
+                            <p>Active Faculty Members</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card info"><i class="fas fa-book stat-icon info"></i>
+                        <div class="stat-info">
+                            <h3 id="statTotalCourses">--</h3>
+                            <p>Active Courses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card danger"><i class="fas fa-exclamation-triangle stat-icon danger"></i>
+                        <div class="stat-info">
+                            <h3 id="statLowAttendance">--</h3>
+                            <p>Low Attendance (<75%)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action & Campus Summary Banner -->
+            <div class="dashboard-card mb-4 bg-light">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold text-dark"><i class="fas fa-chart-line text-primary me-2"></i> Campus Academic Status</h5>
+                        <p class="text-muted mb-0">Average Campus Attendance is currently at <strong class="text-success" id="statAvgAttendance">--%</strong>. Review low-attendance students or manage faculty course loads below.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <button class="btn btn-primary btn-sm me-2" onclick="$('a[data-target=students]').click(); $('#openAddStudentModalBtn').click();">
+                            <i class="fas fa-user-plus me-1"></i> Add Student
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="$('a[data-target=faculty]').click(); $('#openAddFacultyModalBtn').click();">
+                            <i class="fas fa-plus me-1"></i> Add Faculty
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Attendance Flagged Students Table -->
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h5><i class="fas fa-user-clock text-danger me-2"></i> Low Attendance Warning List (&lt; 75%)</h5>
+                    <span class="badge bg-danger rounded-pill px-3 py-2">Action Required</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Department</th>
+                                <th>Semester</th>
+                                <th>Attendance %</th>
+                                <th>Status</th>
+                                <th>Contact Guardian</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowAttendanceTbody">
+                            <tr><td colspan="7" class="text-center text-muted py-3">Loading attendance data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MANAGE STUDENTS -->
+        <div class="tab-pane-content d-none" id="studentsSection">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header flex-wrap gap-3">
+                    <h5><i class="fas fa-user-graduate text-primary me-2"></i> Registered Students Directory</h5>
+                    <button class="btn btn-primary" id="openAddStudentModalBtn" data-bs-toggle="modal" data-bs-target="#studentModal">
+                        <i class="fas fa-plus-circle me-1"></i> Register New Student
+                    </button>
+                </div>
+
+                <!-- Filters & Live Search Bar -->
+                <div class="row g-3 mb-4 p-3 bg-light rounded-3 border">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" class="form-control" id="studentSearchInput" placeholder="Search by Roll No, Name or Email...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="studentDeptFilter">
+                            <option value="">All Departments</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="studentSemFilter">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-secondary w-100" id="resetStudentFilterBtn">
+                            <i class="fas fa-undo me-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Semester</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Guardian</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTbody">
+                            <tr><td colspan="8" class="text-center text-muted py-4">Loading students...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MANAGE FACULTY -->
+        <div class="tab-pane-content d-none" id="facultySection">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header flex-wrap gap-3">
+                    <h5><i class="fas fa-chalkboard-teacher text-success me-2"></i> Faculty Members Directory</h5>
+                    <button class="btn btn-success text-white" id="openAddFacultyModalBtn" data-bs-toggle="modal" data-bs-target="#facultyModal">
+                        <i class="fas fa-user-plus me-1"></i> Add Faculty Member
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Emp ID</th>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Qualification</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facultyTbody">
+                            <tr><td colspan="8" class="text-center text-muted py-4">Loading faculty...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: COURSES & ASSIGN TEACHERS -->
+        <div class="tab-pane-content d-none" id="coursesSection">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header flex-wrap gap-3">
+                    <h5><i class="fas fa-book-open text-info me-2"></i> Courses & Assigned Teachers</h5>
+                    <button class="btn btn-info text-white" id="openAddCourseModalBtn" data-bs-toggle="modal" data-bs-target="#courseModal">
+                        <i class="fas fa-plus-circle me-1"></i> Add New Course
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Title</th>
+                                <th>Credits</th>
+                                <th>Semester</th>
+                                <th>Department</th>
+                                <th>Assigned Faculty</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTbody">
+                            <tr><td colspan="7" class="text-center text-muted py-4">Loading courses...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: DEPARTMENTS -->
+        <div class="tab-pane-content d-none" id="departmentsSection">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header flex-wrap gap-3">
+                    <h5><i class="fas fa-building text-warning me-2"></i> Academic Departments</h5>
+                    <button class="btn btn-warning text-dark" data-bs-toggle="modal" data-bs-target="#departmentModal">
+                        <i class="fas fa-plus me-1"></i> Add Department
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Department Name</th>
+                                <th>Description</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departmentsTbody">
+                            <tr><td colspan="4" class="text-center text-muted py-4">Loading departments...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ==========================================================================
+     MODALS
+     ========================================================================== -->
+
+<!-- Student Modal (Add / Edit) -->
+<div class="modal fade" id="studentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="studentForm">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="studentModalTitle"><i class="fas fa-user-plus me-2"></i> Register New Student</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="studentEditId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Roll Number *</label>
+                            <input type="text" class="form-control" id="stuRollNo" required placeholder="e.g. STU2024005">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Email Address *</label>
+                            <input type="email" class="form-control" id="stuEmail" required placeholder="student@sms.edu">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">First Name *</label>
+                            <input type="text" class="form-control" id="stuFirstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Last Name *</label>
+                            <input type="text" class="form-control" id="stuLastName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Department *</label>
+                            <select class="form-select" id="stuDeptSelect" required></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Current Semester *</label>
+                            <select class="form-select" id="stuSemSelect" required>
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                                <option value="3">3rd Semester</option>
+                                <option value="4">4th Semester</option>
+                                <option value="5">5th Semester</option>
+                                <option value="6">6th Semester</option>
+                                <option value="7">7th Semester</option>
+                                <option value="8">8th Semester</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Phone Number</label>
+                            <input type="text" class="form-control" id="stuPhone" placeholder="+1-555-0100">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Date of Birth</label>
+                            <input type="date" class="form-control" id="stuDob">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Gender</label>
+                            <select class="form-select" id="stuGender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Blood Group</label>
+                            <select class="form-select" id="stuBloodGroup">
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Guardian Name</label>
+                            <input type="text" class="form-control" id="stuGuardianName">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Guardian Phone</label>
+                            <input type="text" class="form-control" id="stuGuardianPhone">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Residential Address</label>
+                            <input type="text" class="form-control" id="stuAddress" placeholder="Street, City, Postal Code">
+                        </div>
+                        <div class="col-md-6" id="stuPasswordContainer">
+                            <label class="form-label small fw-bold">Initial Account Password</label>
+                            <input type="password" class="form-control" id="stuPassword" placeholder="Default: student@123">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveStudentBtn">
+                        <i class="fas fa-save me-1"></i> Save Student
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Faculty Modal (Add / Edit) -->
+<div class="modal fade" id="facultyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="facultyForm">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="facultyModalTitle"><i class="fas fa-user-plus me-2"></i> Add Faculty Member</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="facultyEditId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Employee ID *</label>
+                            <input type="text" class="form-control" id="facEmpId" required placeholder="e.g. FAC-105">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Email Address *</label>
+                            <input type="email" class="form-control" id="facEmail" required placeholder="faculty@sms.edu">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">First Name *</label>
+                            <input type="text" class="form-control" id="facFirstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Last Name *</label>
+                            <input type="text" class="form-control" id="facLastName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Department *</label>
+                            <select class="form-select" id="facDeptSelect" required></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Designation *</label>
+                            <input type="text" class="form-control" id="facDesignation" required placeholder="e.g. Assistant Professor">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Qualification</label>
+                            <input type="text" class="form-control" id="facQualification" placeholder="e.g. Ph.D., M.Tech">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Phone Number</label>
+                            <input type="text" class="form-control" id="facPhone" placeholder="+1-555-0100">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Joining Date</label>
+                            <input type="date" class="form-control" id="facJoiningDate">
+                        </div>
+                        <div class="col-md-6" id="facPasswordContainer">
+                            <label class="form-label small fw-bold">Initial Account Password</label>
+                            <input type="password" class="form-control" id="facPassword" placeholder="Default: faculty@123">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="saveFacultyBtn">
+                        <i class="fas fa-save me-1"></i> Save Faculty
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Course Modal (Add / Edit) -->
+<div class="modal fade" id="courseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="courseForm">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="courseModalTitle"><i class="fas fa-book me-2"></i> Add New Course</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="courseEditId">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Course Code *</label>
+                        <input type="text" class="form-control" id="courseCode" required placeholder="e.g. CS505">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Course Title *</label>
+                        <input type="text" class="form-control" id="courseName" required placeholder="e.g. Artificial Intelligence">
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Credits *</label>
+                            <input type="number" class="form-control" id="courseCredits" required min="1" max="10" value="4">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Semester *</label>
+                            <select class="form-select" id="courseSemester" required>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5" selected>Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Department *</label>
+                        <select class="form-select" id="courseDeptSelect" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Assign Teacher (Faculty) *</label>
+                        <select class="form-select" id="courseFacultySelect">
+                            <option value="">-- No Faculty Assigned --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info text-white">
+                        <i class="fas fa-save me-1"></i> Save Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Department Modal -->
+<div class="modal fade" id="departmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="departmentForm">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="fas fa-building me-2"></i> Add Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Department Code *</label>
+                        <input type="text" class="form-control" id="deptCode" required placeholder="e.g. AI-DS">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Department Name *</label>
+                        <input type="text" class="form-control" id="deptName" required placeholder="e.g. Artificial Intelligence & Data Science">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Description</label>
+                        <textarea class="form-control" id="deptDesc" rows="3" placeholder="Brief department description..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning text-dark">
+                        <i class="fas fa-save me-1"></i> Save Department
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 3.7.1 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Bootstrap 5.3 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Application Scripts -->
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+
+</body>
+</html>

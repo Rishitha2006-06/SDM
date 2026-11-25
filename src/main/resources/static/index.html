@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System | Portal Login</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-body">
+
+<div class="login-card">
+    <div class="row g-0">
+        <!-- Left Side: Institution Branding -->
+        <div class="col-lg-5 login-banner">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-white text-primary p-3 rounded-4 shadow-sm">
+                        <i class="fas fa-graduation-cap fa-2x"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0 text-white">AcademiaSMS</h4>
+                        <small class="text-white-50">Enterprise College Management</small>
+                    </div>
+                </div>
+
+                <h3 class="fw-bold mb-3">All-In-One Academic Management Platform</h3>
+                <p class="text-white-50 mb-4">
+                    Empowering colleges and educational institutions to manage students, attendance, examinations, and faculties seamlessly in one unified cloud system.
+                </p>
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-check-circle text-info"></i>
+                        <span>Role-Based Access (Admin, Faculty, Student)</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-check-circle text-info"></i>
+                        <span>Automated Attendance Tracking & <75% Alerts</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-check-circle text-info"></i>
+                        <span>Semester Marks, GPA & PDF Report Cards</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-top border-white-50 text-white-50 small">
+                <span>Java Full Stack Project &bull; Spring Boot &bull; Hibernate &bull; MySQL</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="col-lg-7 login-form-container">
+            <div class="mb-4">
+                <h4 class="fw-bold text-dark mb-1">Welcome Back!</h4>
+                <p class="text-muted small">Select your portal role and sign in to access your dashboard.</p>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="loginAlertContainer"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Portal Role</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-user-shield"></i></span>
+                        <select class="form-select border-start-0" id="roleSelect">
+                            <option value="">Auto-Detect Role (Recommended)</option>
+                            <option value="ROLE_ADMIN">Administrator</option>
+                            <option value="ROLE_FACULTY">Faculty / Teacher</option>
+                            <option value="ROLE_STUDENT">Student</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Username / Roll No / Employee ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control border-start-0" id="username" placeholder="e.g. admin or STU2024001" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control border-start-0" id="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" id="loginSubmitBtn" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm mb-4">
+                    <i class="fas fa-sign-in-alt me-2"></i> Sign In to Portal
+                </button>
+            </form>
+
+            <!-- Quick Demo One-Click Fill -->
+            <div class="border-top pt-3">
+                <div class="small fw-bold text-secondary mb-2">
+                    <i class="fas fa-bolt text-warning me-1"></i> Quick Demo Access (Click to auto-fill):
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="demo-account-chip" data-user="admin" data-pass="admin@123" data-role="ROLE_ADMIN">
+                        <i class="fas fa-shield-alt text-primary"></i> <strong>Admin</strong> (admin)
+                    </span>
+                    <span class="demo-account-chip" data-user="prof.smith" data-pass="faculty@123" data-role="ROLE_FACULTY">
+                        <i class="fas fa-chalkboard-teacher text-success"></i> <strong>Faculty</strong> (prof.smith)
+                    </span>
+                    <span class="demo-account-chip" data-user="STU2024001" data-pass="student@123" data-role="ROLE_STUDENT">
+                        <i class="fas fa-user-graduate text-info"></i> <strong>Student</strong> (STU2024001)
+                    </span>
+                    <span class="demo-account-chip" data-user="STU2024003" data-pass="student@123" data-role="ROLE_STUDENT">
+                        <i class="fas fa-exclamation-triangle text-danger"></i> <strong>Low-Att Student</strong> (STU2024003)
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 3.7.1 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Bootstrap 5.3 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Application Scripts -->
+<script src="/js/common.js"></script>
+<script src="/js/auth.js"></script>
+
+</body>
+</html>
