@@ -65,6 +65,7 @@ Strictly developed using the required Java Full Stack internship technology stac
   - Interactive student roster with Present, Late, and Absent status radio pills.
   - One-click **"Mark All Present"** shortcut.
   - Lecture remarks for individual students.
+- **Register New Student**: Direct button on the faculty dashboard to register new students and automatically map them to department and semester courses.
 - **Examination Marks Entry**:
   - Evaluation type selector: Mid-Term 1 (30), Mid-Term 2 (30), Assignments (20), Semester Final (100), Lab Internal (50).
   - Dynamic grade badge preview (`A+`, `A`, `B`, `C`, `D`, `E`, `F`) calculated live on keystroke via jQuery.
@@ -106,11 +107,14 @@ Initial data is automatically pre-seeded by `DataInitializer.java` upon first st
 
 | Portal | Username / ID | Password | Role Description |
 |---|---|---|---|
-| **Administrator** | `admin` | `admin@123` | System Administrator |
-| **Faculty Member** | `prof.smith` | `faculty@123` | Prof. Alan Smith (HOD, Computer Science) |
-| **Faculty Member** | `dr.raj` | `faculty@123` | Dr. Rajesh Kumar (Associate Professor) |
-| **Student (Regular)** | `STU2024001` | `student@123` | Alex Morgan (88% Attendance, 9.4 CGPA) |
-| **Student (Low Att.)** | `STU2024003` | `student@123` | Rahul Sharma (58% Attendance - Demonstrates Alert) |
+| **Administrator** | `admin` | `admin@123` | Dr. Vikramaditya Joshi (Administrator) |
+| **Faculty Member** | `dr.rajesh` | `faculty@123` | Dr. Rajesh Sharma (Professor & HOD, CSE) |
+| **Faculty Member** | `prof.sunita` | `faculty@123` | Prof. Sunita Verma (Associate Professor, CSE) |
+| **Faculty Member** | `dr.amit` | `faculty@123` | Dr. Amit Patel (Professor, CSE) |
+| **Faculty Member** | `prof.priya` | `faculty@123` | Prof. Priya Nair (Assistant Professor, CSE) |
+| **Student (High Att.)** | `STU2024001` | `student@123` | Aarav Sharma (93% Attendance, 9.5 CGPA) |
+| **Student (Good Att.)** | `STU2024002` | `student@123` | Diya Patel (88% Attendance, 9.1 CGPA) |
+| **Student (Low Att.)** | `STU2024003` | `student@123` | Rohan Verma (53% Attendance - Demonstrates Alert) |
 
 *(Quick demo buttons are also provided directly on the login screen for one-click auto-fill).*
 

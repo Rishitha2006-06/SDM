@@ -414,4 +414,74 @@ $(document).ready(function() {
             }
         });
     }
+
+    // -------------------------------------------------------------
+    // REGISTER STUDENT MODAL (Faculty Portal)
+    // -------------------------------------------------------------
+    function loadDepartmentsForStudentReg() {
+        $.ajax({
+            url: '/api/faculty/departments',
+            method: 'GET',
+            success: function(res) {
+                if (res.success && res.data) {
+                    const sel = $('#facStuDeptSelect').empty();
+                    sel.append('<option value="">Select Department</option>');
+                    res.data.forEach(d => {
+                        sel.append(`<option value="${d.id}">${d.departmentCode} - ${d.departmentName}</option>`);
+                    });
+                }
+            }
+        });
+    }
+
+    // Load departments when opening student modal
+    $('#openRegisterStudentModalBtn, button[data-bs-target="#registerStudentModal"]').on('click', function() {
+        loadDepartmentsForStudentReg();
+    });
+    loadDepartmentsForStudentReg();
+
+    // Submit Student Registration Form
+    $('#facultyRegisterStudentForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const data = {
+            rollNumber: $('#facStuRollNo').val().trim(),
+            email: $('#facStuEmail').val().trim(),
+            firstName: $('#facStuFirstName').val().trim(),
+            lastName: $('#facStuLastName').val().trim(),
+            departmentId: $('#facStuDeptSelect').val(),
+            currentSemester: $('#facStuSemSelect').val(),
+            phone: $('#facStuPhone').val().trim(),
+            dob: $('#facStuDob').val() || null,
+            gender: $('#facStuGender').val(),
+            bloodGroup: $('#facStuBloodGroup').val(),
+            guardianName: $('#facStuGuardianName').val().trim(),
+            guardianPhone: $('#facStuGuardianPhone').val().trim(),
+            address: $('#facStuAddress').val().trim(),
+            password: $('#facStuPassword').val() || 'student@123'
+        };
+
+        const btn = $('#submitRegisterStudentBtn');
+        const origText = btn.html();
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Registering...');
+
+        $.ajax({
+            url: '/api/faculty/students',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(res) {
+                btn.prop('disabled', false).html(origText);
+                $('#registerStudentModal').modal('hide');
+                $('#facultyRegisterStudentForm')[0].reset();
+                SMS.showAlert('facultyAlertContainer', `Student ${data.firstName} ${data.lastName} (${data.rollNumber}) registered successfully!`, 'success');
+                loadPerformanceRoster();
+            },
+            error: function(xhr) {
+                btn.prop('disabled', false).html(origText);
+                const msg = xhr.responseJSON ? xhr.responseJSON.message : 'Error registering student';
+                SMS.showAlert('facultyAlertContainer', msg, 'danger');
+            }
+        });
+    });
 });

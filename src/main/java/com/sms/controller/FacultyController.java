@@ -2,13 +2,16 @@ package com.sms.controller;
 
 import com.sms.dto.*;
 import com.sms.model.Course;
+import com.sms.model.Department;
 import com.sms.model.ExamType;
 import com.sms.model.Marks;
 import com.sms.model.Student;
 import com.sms.service.AttendanceService;
 import com.sms.service.CourseService;
+import com.sms.service.DepartmentService;
 import com.sms.service.FacultyService;
 import com.sms.service.MarksService;
+import com.sms.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,15 +29,21 @@ public class FacultyController {
     private final CourseService courseService;
     private final AttendanceService attendanceService;
     private final MarksService marksService;
+    private final StudentService studentService;
+    private final DepartmentService departmentService;
 
     public FacultyController(FacultyService facultyService,
                              CourseService courseService,
                              AttendanceService attendanceService,
-                             MarksService marksService) {
+                             MarksService marksService,
+                             StudentService studentService,
+                             DepartmentService departmentService) {
         this.facultyService = facultyService;
         this.courseService = courseService;
         this.attendanceService = attendanceService;
         this.marksService = marksService;
+        this.studentService = studentService;
+        this.departmentService = departmentService;
     }
 
     private Long getFacultyId(HttpServletRequest request) {
@@ -102,5 +111,21 @@ public class FacultyController {
             @RequestParam Long courseId,
             @RequestParam(required = false) ExamType examType) {
         return ResponseEntity.ok(ApiResponse.ok("Marks list", marksService.getCourseMarks(courseId, examType)));
+    }
+
+    // Student Registration from Faculty Dashboard
+    @PostMapping("/students")
+    public ResponseEntity<ApiResponse<Student>> registerStudent(@RequestBody StudentDto dto) {
+        try {
+            Student created = studentService.createStudent(dto);
+            return ResponseEntity.ok(ApiResponse.ok("Student registered successfully", created));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/departments")
+    public ResponseEntity<ApiResponse<List<Department>>> getDepartments() {
+        return ResponseEntity.ok(ApiResponse.ok("Departments retrieved", departmentService.getAllDepartments()));
     }
 }
